@@ -12,3 +12,9 @@ banggood 5V 0-12HPa Press transducer	SKU237545 $12.95
   g to black of sensor
   A0 to yellow of sensor
   
+  
+TODOs
+X sensor test, reading via serial monitor
+_ calibration v boiler meter
+_ send data to webserver or MQTT
+_ sleep between readings
