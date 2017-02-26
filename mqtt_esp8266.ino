@@ -34,20 +34,14 @@ WiFiClient client;
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
-// Setup a feed called 'sensorVolts' for publishing.
-// Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
+// Setup feeds called 'sensorVolts' for publishing using the form: <username>/feeds/<feedname>
 Adafruit_MQTT_Publish sensorVolts = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/sensorVolts");
-
-// Setup a feed called 'RSSI' for publishing.
-// Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
 Adafruit_MQTT_Publish rssi = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/rssi");
 
 // Setup a feed called 'onoff' for subscribing to changes.
 Adafruit_MQTT_Subscribe onoffbutton = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/onoff");
 
-
 // Bug workaround for Arduino 1.6.6, it seems to need a function declaration
-// for some reason (only affects ESP8266, likely an arduino-builder bug).
 void MQTT_connect();
 
 void setup() {
@@ -61,14 +55,12 @@ void setup() {
   Serial.println(); Serial.println();
   Serial.print("Connecting to ");
   Serial.println(WLAN_SSID);
-
   WiFi.begin(WLAN_SSID, WLAN_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
   Serial.println();
-
   Serial.println("WiFi connected");
   Serial.println("IP address: "); Serial.println(WiFi.localIP());
 
@@ -85,8 +77,6 @@ void loop() {
   MQTT_connect();
 
   // this is our 'wait for incoming subscription packets' busy subloop
-  // try to spend your time here
-
   Adafruit_MQTT_Subscribe *subscription;
   while ((subscription = mqtt.readSubscription(5000))) {
     if (subscription == &onoffbutton) {
@@ -97,18 +87,18 @@ void loop() {
       if (strcmp((char *)onoffbutton.lastread, "ON") == 0) {
         digitalWrite(lamp_pin, HIGH);
         digitalWrite(BUILTIN_LED, HIGH);
-        //Serial.println("degug loop led high");
+        //Serial.println("degug loop led high"); //to debug
       }
       if (strcmp((char *)onoffbutton.lastread, "OFF") == 0) {
         digitalWrite(lamp_pin, LOW);
         digitalWrite(BUILTIN_LED, LOW);
-        //Serial.println("degug loop led low");
+        //Serial.println("degug loop led low");  //to debug
       }
     }
   }
 
-  // Now we can publish stuff!
-  x = analogRead(A0);
+  //publish to MQTT broker
+  x = analogRead(A0); //value of pressure sensor
   Serial.print(F("\nSending sensorVolts val "));
   Serial.print(x);
   Serial.print("...");
@@ -118,7 +108,7 @@ void loop() {
     Serial.println(F("OK!"));
   }
 
-  // Print RSSI
+  // Print RSSI  (-50 excellent, -75 good, -90 at limit)
   int rssiVal = WiFi.RSSI();
   Serial.print("RSSI:");
   Serial.println(rssiVal);
@@ -128,13 +118,7 @@ void loop() {
   } else {
     Serial.println(F("OK!"));
   }
-
-
-
   delay(1000);
-
-
-
 
   // ping the server to keep the mqtt connection alive
   // NOT required if you are publishing once every KEEPALIVE seconds
