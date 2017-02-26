@@ -16,7 +16,9 @@ banggood 5V 0-12HPa Press transducer	SKU237545 $12.95
   
   
 TODOs
-  X sensor test, reading via serial monitor
-  _ calibration v boiler meter
-  X send data to webserver or MQTT
-  _ sleep between readings
+1. X sensor test, reading via serial monitor
+2. X calibration v boiler meter
+3. X send data to webserver or MQTT
+4. _ sleep between readings
+5. _ choose battery and package
+6. _ implement OTA scheme
