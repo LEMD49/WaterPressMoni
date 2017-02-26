@@ -1,11 +1,9 @@
 /*Adafruit MQTT Library ESP8266 Example
   Must use ESP8266 Arduino from:
     https://github.com/esp8266/Arduino
-
   Works great with Adafruit's Huzzah ESP board & Feather
   ----> https://www.adafruit.com/product/2471
   ----> https://www.adafruit.com/products/2821
-
   Adafruit invests time and resources providing this open source code,
   please support Adafruit and open-source hardware by purchasing
   products from Adafruit!
@@ -18,6 +16,7 @@
 #include "Adafruit_MQTT_Client.h"
 #include <credentialsAdafruitIO.h>  //no need to put confidential details below now
 const int lamp_pin = 5;  //GPIO5 is D1 on D1 mini
+uint32_t x = 0;
 
 /*  WiFi Access Point and MQTT Broker setup, for manual def if not using my lib credentiaslAdafruitIO
   #define WLAN_SSID       "xxx"
@@ -54,16 +53,14 @@ void MQTT_connect();
 void setup() {
   Serial.begin(115200);
   delay(10);
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(lamp_pin, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT); //not needed, for checking command button. active low
+  pinMode(lamp_pin, OUTPUT);  //not needed, for checking command button, active high
   Serial.println(F("Adafruit MQTT demo"));
 
   // Connect to WiFi access point.
   Serial.println(); Serial.println();
   Serial.print("Connecting to ");
   Serial.println(WLAN_SSID);
-
-
 
   WiFi.begin(WLAN_SSID, WLAN_PASS);
   while (WiFi.status() != WL_CONNECTED) {
@@ -79,7 +76,7 @@ void setup() {
   mqtt.subscribe(&onoffbutton);
 }
 
-uint32_t x = 0;
+
 
 void loop() {
   // Ensure the connection to the MQTT server is alive (this will make the first
