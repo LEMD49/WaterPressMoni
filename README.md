@@ -20,6 +20,7 @@ TODOs
 1. X sensor test, reading via serial monitor
 2. X calibration v boiler meter
 3. X send data to webserver or MQTT (ok on Adadfruit IO - AIO)
-4. _ sleep between readings
-5. _ choose battery and package
-6. _ implement OTA scheme
+4. X implement OTA scheme
+5. _ sleep between readings
+6. _ choose battery and package
+
